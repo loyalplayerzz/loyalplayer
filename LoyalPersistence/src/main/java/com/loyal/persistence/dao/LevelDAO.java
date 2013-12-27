@@ -9,6 +9,7 @@ import org.hibernate.LockMode;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
@@ -83,6 +84,17 @@ public class LevelDAO {
         }
     }
     
+    public Integer getLevelIDFromPoints(Integer points){
+    	
+    	List<LevelDTO> levelList = getSession().createCriteria(LevelDTO.class).add(Restrictions.gt("points", points)).list();
+		
+		if(levelList==null || levelList.isEmpty()){
+			return 1;
+		} else {
+			return levelList.get(0).getId()-1;
+		}
+		
+	}
     
     public List<LevelDTO> findByExample(LevelDTO instance) {
         log.debug("finding Level instance by example");

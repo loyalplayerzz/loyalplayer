@@ -35,7 +35,7 @@
 	<bean id="sessionFactory"
 		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
 		<property name="dataSource" ref="dataSource"></property>
-		<property name="packagesToScan" value="com.loyal.persistence.dto"/>
+		<property name="packagesToScan" value="com.loyal.persistence.dto" />
 		<property name="hibernateProperties">
 			<props>
 				<prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
@@ -46,27 +46,56 @@
 
 	<bean id="persistenceExceptionTranslationPostProcessor"
 		class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor" />
-		
-		<tx:annotation-driven/> 
+
+	<tx:annotation-driven />
 
 	<bean id="transactionManager"
 		class="org.springframework.orm.hibernate4.HibernateTransactionManager">
-		<property name = "sessionFactory" ref = "sessionFactory" />
+		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
 	<bean id="levelHelper" class="com.loyal.service.helper.LevelHelper">
 		<property name="levelDAO" ref="levelDAO" />
 	</bean>
 	
+	<bean id="algorithmHelper" class="com.loyal.service.helper.AlgorithmHelper">
+		<property name="algorithmDAO" ref="algorithmDAO" />
+		<property name="algoTotalbetonproviderDAO" ref="algoTotalbetonproviderDAO" />
+		<property name="algoTotalRoundsOnGameDAO" ref="algoTotalRoundsOnGameDAO" />
+	</bean>
+
+	<bean id="badgeHelper" class="com.loyal.service.helper.BadgeHelper">
+		<property name="badgeDetailDAO" ref="badgeDetailDAO" />
+		<property name="badgeLoyalGiftDAO" ref="badgeLoyalGiftDAO"/>
+	</bean>
+
 	<bean id="loyalPointsHelper" class="com.loyal.service.helper.LoyalPointsHelper">
 		<property name="loyalPointsDAO" ref="loyalPointsDAO" />
 	</bean>
-	
+
 	<bean id="loyalGiftsHelper" class="com.loyal.service.helper.LoyalGiftsHelper">
 		<property name="loyalGiftsDAO" ref="loyalGiftsDAO" />
 	</bean>
+
+	<bean id="badgeDetailDAO" class="com.loyal.persistence.dao.BadgeDetailsDAO">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
 	
-		<bean id="loyalGiftsDAO" class="com.loyal.persistence.dao.LoyalGiftsDAO">
+	<bean id="badgeLoyalGiftDAO" class="com.loyal.persistence.dao.BadgeLoyalgiftDAO">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+
+	<bean id="loyalGiftsDAO" class="com.loyal.persistence.dao.LoyalGiftsDAO">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	
+	<bean id="algorithmDAO" class="com.loyal.persistence.dao.AlgorithmDAO">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	<bean id="algoTotalbetonproviderDAO" class="com.loyal.persistence.dao.AlgoTotalbetonproviderDAO">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	<bean id="algoTotalRoundsOnGameDAO" class="com.loyal.persistence.dao.AlgoTotalroundsongameDAO">
 		<property name="sessionFactory" ref="sessionFactory"></property>
 	</bean>
 

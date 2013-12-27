@@ -1,12 +1,8 @@
 package com.loyal.persistence.dto;
 
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import static javax.persistence.GenerationType.SEQUENCE;
 import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 
@@ -26,6 +22,7 @@ public class PlayersDTO  implements java.io.Serializable {
      private Integer id;
      private Boolean active;
      private String externalUserId;
+     private Integer betAmt;
      private Boolean loyalpointsEligibile;
      private Boolean badgesEligible;
      private Integer age;
@@ -45,9 +42,10 @@ public class PlayersDTO  implements java.io.Serializable {
     }
     
     /** full constructor */
-    public PlayersDTO(Boolean active, String externalUserId, Boolean loyalpointsEligibile, Boolean badgesEligible, Integer age, String sex, String country) {
+    public PlayersDTO(Boolean active, String externalUserId, Integer betAmt, Boolean loyalpointsEligibile, Boolean badgesEligible, Integer age, String sex, String country) {
         this.active = active;
         this.externalUserId = externalUserId;
+        this.betAmt = betAmt;
         this.loyalpointsEligibile = loyalpointsEligibile;
         this.badgesEligible = badgesEligible;
         this.age = age;
@@ -57,8 +55,8 @@ public class PlayersDTO  implements java.io.Serializable {
 
    
     // Property accessors
-    @SequenceGenerator(name="generator")@Id @GeneratedValue(strategy=SEQUENCE, generator="generator")
-    
+    //@SequenceGenerator(name="generator")@Id @GeneratedValue(strategy=SEQUENCE, generator="generator")
+    @Id
     @Column(name="id", unique=true, nullable=false)
 
     public Integer getId() {
@@ -87,6 +85,16 @@ public class PlayersDTO  implements java.io.Serializable {
     
     public void setExternalUserId(String externalUserId) {
         this.externalUserId = externalUserId;
+    }
+    
+    @Column(name="bet_amt")
+
+    public Integer getBetAmt() {
+        return this.betAmt;
+    }
+    
+    public void setBetAmt(Integer betAmt) {
+        this.betAmt = betAmt;
     }
     
     @Column(name="loyalpoints_eligibile")

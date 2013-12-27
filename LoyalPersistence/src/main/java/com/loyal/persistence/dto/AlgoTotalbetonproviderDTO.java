@@ -2,10 +2,7 @@ package com.loyal.persistence.dto;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import static javax.persistence.GenerationType.SEQUENCE;
 import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 
@@ -44,8 +41,8 @@ public class AlgoTotalbetonproviderDTO  implements java.io.Serializable {
 
    
     // Property accessors
-    @SequenceGenerator(name="generator")@Id @GeneratedValue(strategy=SEQUENCE, generator="generator")
-    
+    //@SequenceGenerator(name="generator")@Id @GeneratedValue(strategy=SEQUENCE, generator="generator")
+    @Id
     @Column(name="id", unique=true, nullable=false)
 
     public Integer getId() {

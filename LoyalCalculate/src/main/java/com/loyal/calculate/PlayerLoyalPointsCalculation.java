@@ -1,13 +1,19 @@
 package com.loyal.calculate;
 
+import java.util.Date;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.loyal.persistence.dao.GameRoundSummaryDAO;
+import com.loyal.persistence.dao.LevelDAO;
 import com.loyal.persistence.dao.LoyalpointsDAO;
 import com.loyal.persistence.dao.PlayersDAO;
+import com.loyal.persistence.dao.PlayersLevelDAO;
 import com.loyal.persistence.dao.PlayersLoyalpointsDAO;
 import com.loyal.persistence.dto.GameRoundSummaryDTO;
-import com.loyal.persistence.dto.LoyalpointsDTO;
+import com.loyal.persistence.dto.PlayersDTO;
+import com.loyal.persistence.dto.PlayersLevelDTO;
 import com.loyal.persistence.dto.PlayersLoyalpointsDTO;
 
 
@@ -62,6 +68,28 @@ public class PlayerLoyalPointsCalculation {
 	}
 	
 	@Autowired
+	public PlayersLevelDAO playerLevelDAO;
+	
+	public PlayersLevelDAO getPlayerLevelDAO() {
+		return playerLevelDAO;
+	}
+
+	public void setPlayerLevelDAO(PlayersLevelDAO playerLevelDAO) {
+		this.playerLevelDAO = playerLevelDAO;
+	}
+
+	@Autowired
+	public LevelDAO levelDAO;
+	
+	public LevelDAO getLevelDAO() {
+		return levelDAO;
+	}
+
+	public void setLevelDAO(LevelDAO levelDAO) {
+		this.levelDAO = levelDAO;
+	}
+
+	@Autowired
 	public PlayersLoyalpointsDAO playerLoyalPointsDAO;
 
 	public PlayersLoyalpointsDAO getPlayerLoyalPointsDAO() {
@@ -90,8 +118,7 @@ public class PlayerLoyalPointsCalculation {
 		int noOfRows = retrieveConfigurationBasedOnParam("noOfRows", "ConfigTableName");
 		int startID = retrieveConfigurationBasedOnParam("startID", "ConfigTableName");
 		int playerID = 0;
-		Double betAmt = 0.0;
-		int existingPlayerID = 0;
+		
 		//Map<Integer, Integer> totalBetMap = new HashMap<Integer, Integer>();
 		for(int i = startID; i< startID+noOfRows; i++){
 			// Get PlayerID for that instance
@@ -99,21 +126,60 @@ public class PlayerLoyalPointsCalculation {
 			GameRoundSummaryDTO gameRoundDTO = gameRoundSummaryDAO.findById(startID);
 			playerID = Integer.valueOf(gameRoundDTO.getPlayerId());
 			
-			// Get Total Bet for that instance
-			betAmt = gameRoundDTO.getTotalBet();
-			
 			// Retrieve PlayerID from existing table to variable existingPlayerID
-			if(playersDAO.findById(playerID) != null){
-				//totalBetMap.put(playerID, totalBetMap.get(playerID)+betAmt);
-				//TODO update the player with existing betAmt+newbetAmt
-				PlayersLoyalpointsDTO playersLoyalPointsDTO = (PlayersLoyalpointsDTO) playerLoyalPointsDAO.findByPlayerId(playerID);
-				LoyalpointsDTO loyalPointsDTO = loyalPointsDAO.findById(playersLoyalPointsDTO.getLoyalpointsId());
-				//loyalPointsDTO.setBet(playersDTO.setloyalPointsDTO.getBet()+Integer.valueOf(betAmt););
-				
+			PlayersDTO playerDTO = playersDAO.findById(playerID);
+			int totalBetAmt = 0;
+			if(playerDTO != null){
+				// update the player with existing betAmt+newbetAmt
+				totalBetAmt = playerDTO.getBetAmt()+gameRoundDTO.getTotalBet().intValue();
 			} else {
-				//totalBetMap.put(playerID, betAmt);
-				//TODO update player with only newBetAmt
+				totalBetAmt = gameRoundDTO.getTotalBet().intValue();
 			}
+			playerDTO.setBetAmt(totalBetAmt);
+			//Update Player table
+			playersDAO.merge(playerDTO);
+			
+			//Start for LoyalPoints calculation
+			Integer loyalPointID = loyalPointsDAO.getPointIDBasedOnBet(totalBetAmt);
+			List<PlayersLoyalpointsDTO> playerLoyalDTOList = playerLoyalPointsDAO.findByPlayerId(playerID);
+			PlayersLoyalpointsDTO playerLoyalDTO = new PlayersLoyalpointsDTO();
+			if(playerLoyalDTOList!=null && !playerLoyalDTOList.isEmpty()){
+				playerLoyalDTO = playerLoyalDTOList.get(0);
+				playerLoyalDTO.setLoyalpointsId(loyalPointID);
+				//TODO Temp hard coded
+				playerLoyalDTO.setUpdatedBy("Admin");
+				playerLoyalDTO.setUpdatedTimestamp(new Date());
+			} else {
+				playerLoyalDTO.setLoyalpointsId(loyalPointID);
+				playerLoyalDTO.setPlayerId(playerID);
+				//TODO Temp hard coded
+				playerLoyalDTO.setCreatedBy("Admin");
+				playerLoyalDTO.setCreatedTimestamp(new Date());
+			}
+			//Update Player Loyal Points mapping table
+			playerLoyalPointsDAO.merge(playerLoyalDTO);
+			
+			//Start for Level calculation
+			Integer levelID = levelDAO.getLevelIDFromPoints(loyalPointID);
+			PlayersLevelDTO playerLevelDTO = new PlayersLevelDTO();
+			List<PlayersLevelDTO> playersLevelDTO = playerLevelDAO.findByPlayerId(playerID);
+			if(playerLevelDAO.findByPlayerId(playerID)!=null && !playersLevelDTO.isEmpty()){
+				playerLoyalDTO.setLoyalpointsId(loyalPointID);
+				//TODO Temp hard coded
+				playerLoyalDTO.setUpdatedBy("Admin");
+				playerLoyalDTO.setUpdatedTimestamp(new Date());
+			} else {
+				playerLoyalDTO = new PlayersLoyalpointsDTO();
+				playerLoyalDTO.setLoyalpointsId(loyalPointID);
+				playerLoyalDTO.setPlayerId(playerID);
+				//TODO Temp hard coded
+				playerLoyalDTO.setCreatedBy("Admin");
+				playerLoyalDTO.setCreatedTimestamp(new Date());
+			}
+			//Update Player Loyal Points mapping table
+			playerLoyalPointsDAO.merge(playerLoyalDTO);
+			
+			
 			lastID = i;
 		}
 		

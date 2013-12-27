@@ -60,8 +60,8 @@ public class GameRoundSummaryDTO  implements java.io.Serializable {
 
    
     // Property accessors
-    @SequenceGenerator(name="generator")@Id @GeneratedValue(strategy=SEQUENCE, generator="generator")
-    
+    //@SequenceGenerator(name="generator")@Id @GeneratedValue(strategy=SEQUENCE, generator="generator")
+    @Id
     @Column(name="id", unique=true, nullable=false)
 
     public Integer getId() {

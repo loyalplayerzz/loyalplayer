@@ -8,11 +8,11 @@ import org.hibernate.LockMode;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.loyal.persistence.dto.LevelDTO;
 import com.loyal.persistence.dto.LoyalpointsDTO;
 
 /**
@@ -72,13 +72,22 @@ public class LoyalpointsDAO {
 		}
 	}
 	
+	public Integer getPointIDBasedOnBet(Integer bet){
+	
+		List<LoyalpointsDTO> loyalPointsList= getSession().createCriteria(LoyalpointsDTO.class).add(Restrictions.gt("bet", bet)).list();
+		
+		if(loyalPointsList == null || loyalPointsList.isEmpty()){
+			return 1;
+		} else {
+			return loyalPointsList.get(0).getId() - 1;
+		}
+	}
+	
 	public List<LoyalpointsDTO> findAll() {
 		log.debug("finding all Level instances");
 		try {
 			Query loyalPointsQuery = getSession().createQuery("from "+LoyalpointsDTO.class.getName());
 			List<LoyalpointsDTO> loyalpointsDTOs = loyalPointsQuery.list();
-			//String queryString = "from Level";
-	         //Query queryObject = getSession().createQuery(queryString);
 			 return loyalpointsDTOs;
 		} catch (RuntimeException re) {
 			log.error("find all failed", re);

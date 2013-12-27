@@ -26,6 +26,15 @@ public class AlgorithmHelper {
 	@Autowired
 	public AlgoTotalroundsongameDAO algoTotalRoundsOnGameDAO;
 
+	public AlgoTotalroundsongameDAO getAlgoTotalRoundsOnGameDAO() {
+		return algoTotalRoundsOnGameDAO;
+	}
+
+	public void setAlgoTotalRoundsOnGameDAO(
+			AlgoTotalroundsongameDAO algoTotalRoundsOnGameDAO) {
+		this.algoTotalRoundsOnGameDAO = algoTotalRoundsOnGameDAO;
+	}
+
 	public AlgoTotalbetonproviderDAO getAlgoTotalbetonproviderDAO() {
 		return algoTotalbetonproviderDAO;
 	}
