@@ -1,36 +1,28 @@
-
     create table `mysql`.`ALGORITHM`(
         `id` INT not null auto_increment,
        `param_table` VARCHAR(100),
        `description` VARCHAR(100),
         primary key (`id`)
     );
-
-    create unique index `PRIMARY` on `mysql`.`ALGORITHM`(`id`);
-
- create table `mysql`.`ALGO_TOTALBETONPROVIDER`(
+    
+    
+     create table `mysql`.`ALGO_TOTALBETONPROVIDER`(
         `id` INT not null auto_increment,
        `provider_id` VARCHAR(100),
        `bet_amt` INT,
        `no_of_days` INT,
         primary key (`id`)
     );
-
-    create unique index `PRIMARY` on `mysql`.`ALGO_TOTALBETONPROVIDER`(`id`);
-
-
-    create table `mysql`.`ALGO_TOTALROUNDSONGAME`(
+    
+        create table `mysql`.`ALGO_TOTALROUNDSONGAME`(
         `badge_id` INT not null,
+       `provider_name` INT,
        `no_of_rounds` INT,
-       `bet_amt` INT,
-       `eligible_games` VARCHAR(100),
+       `name_of_games` VARCHAR(100),
         primary key (`badge_id`)
     );
-
-    create unique index `PRIMARY` on `mysql`.`ALGO_TOTALROUNDSONGAME`(`badge_id`);
-
-
-    create table `mysql`.`BADGE_DETAILS`(
+    
+     create table `mysql`.`BADGE_DETAILS`(
         `id` INT not null auto_increment,
        `badge_name` VARCHAR(15),
        `badge_description` VARCHAR(100),
@@ -40,35 +32,34 @@
        `image` VARCHAR(100),
         primary key (`id`)
     );
-
-    create unique index `PRIMARY` on `mysql`.`BADGE_DETAILS`(`id`);
-
-
+    
     create table `mysql`.`BADGE_LOYALGIFT`(
         `id` INT not null auto_increment,
        `badge_id` INT not null,
        `loyal_gift_id` INT not null,
         primary key (`id`)
     );
-
-    create unique index `PRIMARY` on `mysql`.`BADGE_LOYALGIFT`(`id`);
-    create index `badge_id` on `mysql`.`BADGE_LOYALGIFT`(`badge_id`);
-    create index `loyal_gift_id` on `mysql`.`BADGE_LOYALGIFT`(`loyal_gift_id`);
-
-
-    create table `mysql`.`LEVEL_GIFT`(
+    
+     create table `mysql`.`GAME_ROUND_SUMMARY`(
+        `id` INT not null auto_increment,
+       `player_id` VARCHAR(45) not null,
+       `provider` VARCHAR(45),
+       `gameId` VARCHAR(45) not null,
+       `game_round_date` DATETIME not null,
+       `game_rounds` INT not null,
+       `total_bet` DOUBLE,
+       `total_win` DOUBLE,
+        primary key (`id`)
+    );
+    
+     create table `mysql`.`LEVEL_GIFT`(
         `id` INT not null auto_increment,
        `level_id` INT not null,
        `gift_id` INT not null,
         primary key (`id`)
     );
-
-    create unique index `PRIMARY` on `mysql`.`LEVEL_GIFT`(`id`);
-    create index `gift_id` on `mysql`.`LEVEL_GIFT`(`gift_id`);
-    create index `level_id` on `mysql`.`LEVEL_GIFT`(`level_id`);
-
-
-    create table `mysql`.`LEVEL`(
+    
+     create table `mysql`.`LEVEL`(
         `id` INT not null auto_increment,
        `description_en` VARCHAR(100),
        `description_sv` VARCHAR(100),
@@ -76,10 +67,8 @@
        `image` VARCHAR(100),
         primary key (`id`)
     );
-
-    create unique index `PRIMARY` on `mysql`.`LEVEL`(`id`);
-
-
+    
+    
     create table `mysql`.`LOYALPOINTS`(
         `id` INT not null auto_increment,
        `bet` INT,
@@ -87,12 +76,8 @@
        `points` INT,
         primary key (`id`)
     );
-
-    create unique index `LOYALPOINTS` on `mysql`.`LOYALPOINTS`(`id`);
-    create unique index `PRIMARY` on `mysql`.`LOYALPOINTS`(`id`);
-
-
-    create table `mysql`.`LOYAL_GIFTS`(
+    
+      create table `mysql`.`LOYAL_GIFTS`(
         `id` INT not null auto_increment,
        `gift_type` VARCHAR(2),
        `name` VARCHAR(100),
@@ -101,10 +86,54 @@
        `image` VARCHAR(100),
         primary key (`id`)
     );
-
-    create unique index `PRIMARY` on `mysql`.`LOYAL_GIFTS`(`id`);
-
-    create table `mysql`.`PROVIDER`(
+    
+     create table `mysql`.`PLAYERS_BADGE`(
+        `id` INT not null auto_increment,
+       `player_id` INT not null,
+       `badge_id` INT not null,
+       `created_by` VARCHAR(20),
+       `created_timestamp` DATE,
+       `updated_by` VARCHAR(20),
+       `updated_timestamp` DATE,
+        primary key (`id`)
+    );
+    
+    create table `mysql`.`PLAYERS_LEVEL`(
+        `id` INT not null auto_increment,
+       `player_id` INT not null,
+       `level_id` INT not null,
+       `created_by` VARCHAR(20),
+       `created_timestamp` DATE,
+       `updated_by` VARCHAR(20),
+       `updated_timestamp` DATE,
+        primary key (`id`)
+    );
+    
+     create table `mysql`.`PLAYERS_LOYALPOINTS`(
+        `id` INT not null auto_increment,
+       `player_id` INT not null,
+       `loyalpoints_id` INT not null,
+       `created_by` VARCHAR(20),
+       `created_timestamp` DATE,
+       `updated_by` VARCHAR(20),
+       `updated_timestamp` DATE,
+        primary key (`id`)
+    );
+    
+     create table `mysql`.`PLAYERS`(
+        `id` INT not null auto_increment,
+       `active` BIT,
+       `external_user_id` VARCHAR(20) not null,
+       `bet_amt` INT,
+       `loyalpoints_eligibile` BIT,
+       `badges_eligible` BIT,
+       `age` INT,
+       `sex` VARCHAR(1),
+       `country` VARCHAR(25),
+        primary key (`id`)
+    );
+    
+     create table `mysql`.`PROVIDER`(
         `id` INT not null auto_increment,
        `name` VARCHAR(100),
        `description` VARCHAR(100),
@@ -112,6 +141,3 @@
        `active` BIT,
         primary key (`id`)
     );
-
-    create unique index `PRIMARY` on `mysql`.`PROVIDER`(`id`);
-
