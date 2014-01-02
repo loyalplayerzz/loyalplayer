@@ -20,7 +20,7 @@ import com.loyal.persistence.dto.PlayersLoyalpointsDTO;
 
 /**
  * 1) Find from configuration table for how many rows you need to run the job. Lets suppose it is 200
-2) Find from configuration table from which ID you need to run the job. Lets suppose 400
+2) Find from configuration table from which ID you need to run the job. Lets suppose 400 
 3) Run the job for number of rows found in  step 1) and from the the id greater then found in step 2
     so if last time you had run the job till ID 400 then you will in this transaction from ID 401 till next 200 rows.
     lets suppose to you find 175 rows (it can be anything from 0 to 200). Store the last id value in variable
@@ -43,6 +43,7 @@ for each unique userid.(described as alternate method in Step 4)
 to remember that this algo cannot be run on multiple servers else it will cause problems.
  *
  */
+
 public class PlayerLoyalPointsCalculation {
 	
 	@Autowired
